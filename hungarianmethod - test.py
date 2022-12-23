@@ -1,31 +1,26 @@
 from cmath import inf
 import numpy as np
-import pandas as pd
 
-def printMatrix(mat):
-    for i in range(Rows):
-        for j in range(Columns):
-            print(mat[i][j], end=" ")
-        print()
+# def printMatrix(mat):
+#     for i in range(Rows):
+#         for j in range(Columns):
+#             print(mat[i][j], end=" ")
+#         print()
 
+# def inputMatrix():
+#     mat=[]
+#     for i in range(Rows):
+#         # taking row input from the user
+#         row = list(map(int, input().split()))[:Columns]
+#         # appending the 'row' to the 'matrix'
+#         mat.append(row)
+#     return mat
 
-def inputMatrix():
-    mat = []
-    print("Enter matrix elements row wise:")
-    for i in range(Rows):
-        # taking row input from the user
-        row = list(map(int, input().split()))[:Columns]
-        # appending the 'row' to the 'matrix'
-        mat.append(row)
-    return mat
-
-
-Rows = int(input("Give the number of rows:"))
-Columns = int(input("Give the number of columns:"))
-matrix = inputMatrix()
-# matrix = np.reshape(matrix, (Rows, Columns))
-print("\nMatrix:")
-printMatrix(matrix)
+# Rows = int(input("Give the number of rows:"))
+# Columns = int(input("Give the number of columns:"))
+# matrix = inputMatrix()
+# matrix = np.reshape(matrix,(Rows, Columns))
+# #printMatrix(matrix)
 
 
 # matrix=[
@@ -75,33 +70,30 @@ printMatrix(matrix)
 #     [8, 15, 11, 9]
 # ]
 
-# matrix=[
-#     [2,9,2,7],
-#     [6,8,'M',6],
-#     [4,6,5,3],
-#     ['M',2,7,3]
-# ]
+matrix = [
+    [2, 9, 2, 7],
+    [6, 8, 'M', 6],
+    [4, 6, 5, 3],
+    ['M', 2, 7, 3]
+]
 
-
-# global Rows, Columns
-# Rows = len(matrix)
+global Rows, Columns
+#Rows = len(matrix)
 #Columns = len(matrix[0])
 
 
 def dummyRowCol(dummyMatrix):
-    whichdummy="none"
     if (Columns != Rows):
         for i in range(abs(Rows-Columns)):
             if (Rows > Columns):
                 dummyMatrix = np.append(
                     dummyMatrix, np.zeros((Rows, 1), dtype=int), axis=1)
-                whichdummy="Row"
+                #Columns = Columns + 1
             if (Columns > Rows):
                 dummyMatrix = np.append(dummyMatrix, np.zeros(
                     (1, Columns), dtype=int), axis=0)
-                whichdummy="Column"
 
-    return dummyMatrix,whichdummy
+    return dummyMatrix
 
 
 def zeroRow(zeroRowMatrix):
@@ -218,17 +210,12 @@ def assignMatrix(assignMat):
     return count_assignment, assignMat
 
 
-def Min_To_Max(maxMatrix,whichdummy):
+def Min_To_Max(maxMatrix):
     maxvalue = (maxMatrix[maxMatrix != np.inf]).max()
     # print("maxvalue: ",maxvalue)
     maxMatrix = maxvalue-maxMatrix
     if (maxMatrix[maxMatrix == -inf].size > 0):
         maxMatrix[maxMatrix == -inf] = inf
-    if(whichdummy=="Column"):
-        maxMatrix[-1]=np.zeros((1, Columns), dtype=int)
-    elif(whichdummy=="Row"):
-        for i in range(Rows):
-            maxMatrix[i][-1]=0
     return (maxMatrix)
 
 
@@ -252,44 +239,41 @@ Rows = len(matrix)
 Columns = len(matrix[0])
 matrix = np.reshape(matrix, (Rows, Columns))
 
-
-print(type(matrix[0][0]))
+print(type(matrix[0]))
 if (type(matrix[0][0]) == np.str_):
-    # matrix = pd.to_numeric(matrix, errors='ignore')
-    # print("done: ",matrix)
     for i in range(Rows):
         for j in range(Columns):
             try:
                 matrix[i][j].astype('float')
             except:
-                print(matrix[i][j])
+                # print(matrix[i][j])
                 matrix[i][j] = inf
+
     matrix = matrix.astype('float')
 
-matrix,whichdummy = dummyRowCol(matrix)
-if (Columns != Rows):
-    Rows = len(matrix)
-    Columns = len(matrix[0])
-    print("\nMatrix After Adding Dummy Row or Column:\n", matrix)
-
+matrix = dummyRowCol(matrix)
+Rows = len(matrix)
+Columns = len(matrix[0])
 # matclone=()
 # matClone = matrix
 matClone = tuple(map(tuple, matrix))
 # matClone = matClone.astype('float')
 # flag=1
-
 while True:
-    Max_Min = input("\n1. Maximize \n2. Minimize \nEnter Choice: ")
-    print(Max_Min)
+    Max_Min = input("1. Maximize \n2. Minimize \nEnter Choice: ")
+    # print(Max_Min)
     if (Max_Min == '1' or Max_Min == '2'):
         break
     else:
         print("Wrong Choice! please choose 1 or 2\n")
         continue
-    
+
 if Max_Min == '1':
-    matrix = Min_To_Max(matrix,whichdummy)
+    matrix = Min_To_Max(matrix)
     print("\nMaximize Matrix:\n", matrix)
+
+if (Columns != Rows):
+    print("\nMatrix After Adding Dummy Row or Column:\n", matrix)
 
 matrix = zeroRow(matrix)
 print("\nMatrix After subtracting minimum of row from each element of that row:\n", matrix)
